@@ -22,5 +22,36 @@ public class Movie {
 
     private String image;
     private String title;
+
+    public String getPlotSynopsis() {
+        return plotSynopsis;
+    }
+
+    public void setPlotSynopsis(String plotSynopsis) {
+        this.plotSynopsis = plotSynopsis;
+    }
+
+    private String plotSynopsis;
+
+    public String getUserRaing() {
+        return userRaing;
+    }
+
+    public void setUserRaing(String userRaing) {
+        this.userRaing = userRaing;
+    }
+
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    private String userRaing;
+    private String releaseDate;
+
+
 }
 

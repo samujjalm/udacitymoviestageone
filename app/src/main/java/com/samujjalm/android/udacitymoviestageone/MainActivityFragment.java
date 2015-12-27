@@ -1,5 +1,6 @@
 package com.samujjalm.android.udacitymoviestageone;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -44,10 +46,39 @@ public class MainActivityFragment extends Fragment {
         this.gridData = new ArrayList<>();
         mGridAdapter = new GridViewAdapter(getActivity(), R.layout.movie_item_layout, gridData);
         imageGrid.setAdapter(mGridAdapter);
+
+
+
+        imageGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                //Get item at position
+                Movie item = (Movie) parent.getItemAtPosition(position);
+
+                Intent intent = new Intent(getActivity(), DetailsActivity.class);
+
+                // Interesting data to pass across are the thumbnail size/location, the
+                // resourceId of the source bitmap, the picture description, and the
+                // orientation (to avoid returning back to an obsolete configuration if
+                // the device rotates again in the meantime)
+
+
+                //Pass the image title and url to DetailsActivity
+                intent.putExtra("title", item.getTitle()).
+                        putExtra("image", item.getImage()).
+                        putExtra("synopsis", item.getPlotSynopsis()).
+                        putExtra("release_date", item.getReleaseDate()).
+                        putExtra("rating", item.getUserRaing());
+
+                //Start details activity
+                startActivity(intent);
+            }
+        });
+
         new AsyncHttpTask().execute(FEED_URL);
         progressBar.setVisibility(View.VISIBLE);
         return rootView;
     }
+
     public class AsyncHttpTask extends AsyncTask<String, Void, Integer> {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
@@ -117,6 +148,7 @@ public class MainActivityFragment extends Fragment {
             JSONObject response = new JSONObject(result);
             JSONArray posts = response.optJSONArray("results");
             Movie item;
+            gridData.clear();
             for (int i = 0; i < posts.length(); i++) {
                 JSONObject post = posts.optJSONObject(i);
                 String title = post.optString("title");
@@ -125,6 +157,9 @@ public class MainActivityFragment extends Fragment {
                 String URL = "https://image.tmdb.org/t/p/w185";
                 URL += post.optString("poster_path");
                 item.setImage(URL);
+                item.setPlotSynopsis(post.optString("overview"));
+                item.setReleaseDate(post.optString("release_date"));
+                item.setUserRaing(String.valueOf(post.optDouble("vote_average")));
 
                 gridData.add(item);
             }

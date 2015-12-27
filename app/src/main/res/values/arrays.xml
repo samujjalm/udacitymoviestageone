@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sort_order_entries">
+        <item>Ascending</item>
+        <item>Descending</item>
+    </string-array>
+    <string-array name="sort_order_values">
+        <item>desc</item>
+        <item>asc</item>
+    </string-array>
+    <string-array name="sort_criteria_entries">
+        <item>Popularity</item>
+        <item>Highest Rated</item>
+    </string-array>
+    <string-array name="sort_criteria_values">
+        <item>popularity</item>
+        <item>vote_average</item>
+    </string-array>
+</resources>
