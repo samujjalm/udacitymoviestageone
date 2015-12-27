@@ -1,8 +1,10 @@
 package com.samujjalm.android.udacitymoviestageone;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,8 +35,12 @@ public class MainActivityFragment extends Fragment {
     private ProgressBar progressBar;
     private ArrayList<Movie> gridData;
     private GridViewAdapter mGridAdapter;
-    private String FEED_URL = "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=72e01e951ea85dfa501bf89e56eedce1";
+
+
+    private String FEED_URL = "https://api.themoviedb.org/3/discover/movie?sort_by=";
+    private String API_KEY = "&api_key=";
     public MainActivityFragment() {
+
     }
 
     @Override
@@ -56,11 +62,6 @@ public class MainActivityFragment extends Fragment {
 
                 Intent intent = new Intent(getActivity(), DetailsActivity.class);
 
-                // Interesting data to pass across are the thumbnail size/location, the
-                // resourceId of the source bitmap, the picture description, and the
-                // orientation (to avoid returning back to an obsolete configuration if
-                // the device rotates again in the meantime)
-
 
                 //Pass the image title and url to DetailsActivity
                 intent.putExtra("title", item.getTitle()).
@@ -73,6 +74,10 @@ public class MainActivityFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
+        String code = SP.getString("sort_criteria", "popularity") + "." + SP.getString("sort_order", "desc");
+        this.FEED_URL += code + API_KEY + getActivity().getResources().getString(R.string.API_KEY);
 
         new AsyncHttpTask().execute(FEED_URL);
         progressBar.setVisibility(View.VISIBLE);
@@ -100,9 +105,6 @@ public class MainActivityFragment extends Fragment {
 
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                    // But it does make debugging a *lot* easier if you print out the completed
-                    // buffer for debugging.
                     buffer.append(line + "\n");
                 }
 
